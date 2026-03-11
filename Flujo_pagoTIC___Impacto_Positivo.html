@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo pagoTIC — Impacto Positivo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a2f42;
+    --accent-green: #22d3a5;
+    --accent-blue: #4f8ef7;
+    --accent-yellow: #f5c842;
+    --accent-red: #f75f5f;
+    --accent-purple: #a78bfa;
+    --accent-orange: #fb923c;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 24px 64px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header .label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tab:hover { border-color: var(--accent-blue); color: var(--text); }
+  .tab.active { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
+  .tab.green.active { background: var(--accent-green); border-color: var(--accent-green); color: #0f1117; }
+  .tab.red.active { background: var(--accent-red); border-color: var(--accent-red); color: #fff; }
+  .tab.yellow.active { background: var(--accent-yellow); border-color: var(--accent-yellow); color: #0f1117; }
+
+  .flow-section { display: none; }
+  .flow-section.active { display: block; }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .step { width: 100%; }
+
+  .step-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color 0.2s;
+  }
+
+  .step-inner:hover { }
+
+  .step-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content { flex: 1; }
+
+  .step-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  .step-desc ol {
+    margin-top: 8px;
+    padding-left: 20px;
+  }
+
+  .step-desc ol li {
+    margin-bottom: 6px;
+    line-height: 1.55;
+  }
+
+  .step-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 18px;
+    background: var(--border);
+  }
+
+  .connector-arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--border);
+  }
+
+  .connector-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 2px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    margin: 3px 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .branch-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .branch-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Color variants */
+  .c-green .step-inner { border-color: rgba(34,211,165,0.2); }
+  .c-green .step-icon { background: rgba(34,211,165,0.1); }
+  .c-green .step-num { color: var(--accent-green); }
+
+  .c-blue .step-inner { border-color: rgba(79,142,247,0.2); }
+  .c-blue .step-icon { background: rgba(79,142,247,0.1); }
+  .c-blue .step-num { color: var(--accent-blue); }
+
+  .c-yellow .step-inner { border-color: rgba(245,200,66,0.2); }
+  .c-yellow .step-icon { background: rgba(245,200,66,0.1); }
+  .c-yellow .step-num { color: var(--accent-yellow); }
+
+  .c-red .step-inner { border-color: rgba(247,95,95,0.2); }
+  .c-red .step-icon { background: rgba(247,95,95,0.1); }
+  .c-red .step-num { color: var(--accent-red); }
+
+  .c-purple .step-inner { border-color: rgba(167,139,250,0.2); }
+  .c-purple .step-icon { background: rgba(167,139,250,0.1); }
+  .c-purple .step-num { color: var(--accent-purple); }
+
+  .c-orange .step-inner { border-color: rgba(251,146,60,0.2); }
+  .c-orange .step-icon { background: rgba(251,146,60,0.1); }
+  .c-orange .step-num { color: var(--accent-orange); }
+
+  .tag-sistema { background: rgba(79,142,247,0.15); color: var(--accent-blue); }
+  .tag-operativo { background: rgba(245,200,66,0.15); color: var(--accent-yellow); }
+  .tag-pagotic { background: rgba(34,211,165,0.15); color: var(--accent-green); }
+  .tag-cliente { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+  .tag-auto { background: rgba(251,146,60,0.15); color: var(--accent-orange); }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .note {
+    background: rgba(245,200,66,0.05);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin: 16px auto 0;
+    line-height: 1.6;
+  }
+
+  .note strong { color: var(--accent-yellow); }
+
+  .section-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* Field chips */
+  .field-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .field-chip {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(79,142,247,0.1);
+    color: var(--accent-blue);
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* Hover respects step color */
+  .c-green .step-inner:hover { border-color: var(--accent-green); }
+  .c-blue .step-inner:hover { border-color: var(--accent-blue); }
+  .c-yellow .step-inner:hover { border-color: var(--accent-yellow); }
+  .c-red .step-inner:hover { border-color: var(--accent-red); }
+  .c-purple .step-inner:hover { border-color: var(--accent-purple); }
+  .c-orange .step-inner:hover { border-color: var(--accent-orange); }
+
+  /* Clickable link in notes */
+  .note a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* ===== ACTION REQUIRED — Visual distinction for operative steps ===== */
+  .action-required .step-inner {
+    border-left: 5px solid var(--accent-yellow);
+    background: linear-gradient(90deg, rgba(245,200,66,0.07) 0%, var(--surface) 60%);
+    box-shadow: inset 0 0 30px rgba(245,200,66,0.03);
+  }
+
+  .action-required .step-inner:hover {
+    border-left-color: var(--accent-yellow);
+    box-shadow: inset 0 0 30px rgba(245,200,66,0.06), 0 0 15px rgba(245,200,66,0.08);
+  }
+
+  .action-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #0f1117;
+    background: var(--accent-yellow);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Responsive: single column branches on mobile */
+  @media (max-width: 600px) {
+    .branch-grid {
+      grid-template-columns: 1fr;
+    }
+    header h1 { font-size: 22px; }
+    .tabs { gap: 6px; }
+    .tab { padding: 8px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">Impacto Positivo × pagoTIC</div>
+  <h1>Flujo de Cobros — Airtable</h1>
+  <p>Referencia operativa para el equipo de Impacto Positivo</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#4f8ef7"></div> Sistema / Airtable</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> Equipo Operativo</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22d3a5"></div> pagoTIC</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> Cliente</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div> Automático</div>
+</div>
+
+<div class="tabs">
+  <button class="tab green active" onclick="showTab('alta', this)">① Alta de cliente nuevo</button>
+  <button class="tab" onclick="showTab('recurrente', this)">② Cobro recurrente mensual</button>
+  <button class="tab red" onclick="showTab('rechazo', this)">③ Gestión de rechazos</button>
+  <button class="tab yellow" onclick="showTab('proporcionales', this)">④ Gestión de proporcionales</button>
+</div>
+
+<!-- FLUJO 1: ALTA -->
+<div id="alta" class="flow-section active">
+  <p class="section-title">Desde el alta del cliente hasta el primer pago</p>
+  <div class="flow">
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">📝</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 01 — Equipo Operativo</div>
+          <div class="step-title">Creación del registro del cliente en Airtable</div>
+          <div class="step-desc">El equipo operativo de Impacto Positivo crea el registro del nuevo cliente en la base de Airtable completando los siguientes campos obligatorios:</div>
+          <div class="field-chips">
+            <span class="field-chip">ID</span>
+            <span class="field-chip">Fecha de Alta</span>
+            <span class="field-chip">Nombre Completo</span>
+            <span class="field-chip">DNI/CUIT</span>
+            <span class="field-chip">Dirección</span>
+            <span class="field-chip">Mail</span>
+            <span class="field-chip">Cantidad</span>
+            <span class="field-chip">Equipo</span>
+            <span class="field-chip">Tipo de Cliente</span>
+            <span class="field-chip">FC</span>
+            <span class="field-chip">Servicio</span>
+            <span class="field-chip">Tipo Documento</span>
+            <span class="field-chip">Provincia</span>
+            <span class="field-chip">Localidad</span>
+            <span class="field-chip">Tratamiento Impositivo</span>
+          </div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">🧑‍🔧</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 02 — Equipo Operativo</div>
+          <div class="step-title">Visita técnica al domicilio</div>
+          <div class="step-desc">El equipo operativo de Impacto Positivo concurre al domicilio del cliente y valida que el servicio puede implementarse correctamente.</div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">¿Se puede instalar el equipo?</div>
+      <div class="connector-line"></div>
+      <div class="connector-arrow"></div>
+    </div>
+
+    <div class="branch-grid">
+      <div>
+        <div class="branch-label" style="color:var(--accent-green)">✓ Sí — Apto</div>
+        <div class="step c-green action-required">
+          <div class="step-inner">
+            <div class="step-icon">✅</div>
+            <div class="step-content">
+              <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+              <div class="step-num">Equipo operativo activa al cliente</div>
+              <div class="step-title">Estado → "Activo"</div>
+              <div class="step-desc">El equipo operativo de Impacto Positivo modifica el campo <strong style="color:#f5c842">'Estado'</strong> a <strong style="color:#22d3a5">"Activo"</strong> en Airtable, lo que dispara automáticamente la generación del link de adhesión.</div>
+              <span class="step-tag tag-operativo">Operativo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="branch-label" style="color:var(--accent-red)">✗ No — Rechazado</div>
+        <div class="step c-red action-required">
+          <div class="step-inner">
+            <div class="step-icon">🚫</div>
+            <div class="step-content">
+              <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+              <div class="step-num">Instalación no viable</div>
+              <div class="step-title">Estado → "Rechazado"</div>
+              <div class="step-desc">El equipo operativo de Impacto Positivo marca el cliente como <strong style="color:#f75f5f">"Rechazado"</strong> en Airtable. El registro queda inactivo y no se genera link de adhesión.</div>
+              <span class="step-tag tag-operativo">Operativo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-blue">
+      <div class="step-inner">
+        <div class="step-icon">🔗</div>
+        <div class="step-content">
+          <div class="step-num">Paso 03 — Sistema Airtable</div>
+          <div class="step-title">Generación del link de adhesión</div>
+          <div class="step-desc">Al detectar el cambio de estado a "Activo", Airtable genera automáticamente el checkout de adhesión pagoTIC vía script. El link incluye los datos del cliente y el concepto del servicio.</div>
+          <span class="step-tag tag-sistema">Sistema</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-purple">
+      <div class="step-inner">
+        <div class="step-icon">💳</div>
+        <div class="step-content">
+          <div class="step-num">Paso 04 — Cliente</div>
+          <div class="step-title">Cliente ingresa su medio de pago y paga</div>
+          <div class="step-desc">El cliente recibe el link, accede al formulario de pagoTIC e ingresa su tarjeta o CBU. En ese mismo acto realiza el primer pago y queda adherido al débito automático mensual.</div>
+          <span class="step-tag tag-cliente">Cliente</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">webhook pagoTIC → Airtable</div>
+      <div class="connector-line"></div>
+      <div class="connector-arrow"></div>
+    </div>
+
+    <div class="step c-green">
+      <div class="step-inner">
+        <div class="step-icon">📥</div>
+        <div class="step-content">
+          <div class="step-num">Paso 05 — Automático</div>
+          <div class="step-title">Airtable recibe dos notificaciones</div>
+          <div class="step-desc">
+            <strong style="color:#22d3a5">Notificación 1:</strong> Confirmación del primer pago (approved).<br>
+            <strong style="color:#22d3a5">Notificación 2:</strong> Token de adhesión del cliente, necesario para ejecutar cobros futuros.
+          </div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">⚙️</div>
+        <div class="step-content">
+          <div class="step-num">Paso 06 — Automático</div>
+          <div class="step-title">Airtable actualiza el registro del cliente</div>
+          <div class="step-desc">Se guarda el token de adhesión, se registra el primer pago en la base de 'COBROS' como aprobado y se setea la fecha del próximo cobro (mismo día del mes siguiente).</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">🧾</div>
+        <div class="step-content">
+          <div class="step-num">Paso 07 — Automático</div>
+          <div class="step-title">Se genera la factura del primer pago</div>
+          <div class="step-desc">Airtable emite automáticamente la factura correspondiente al primer período abonado.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="note">
+    <strong>Nota operativa:</strong> El cliente realiza el primer pago y la adhesión en un solo acto. A partir de ese momento, los cobros siguientes son ejecutados por Airtable de forma automática mes a mes sin intervención del cliente ni del equipo operativo.
+  </div>
+</div>
+
+<!-- FLUJO 2: RECURRENTE -->
+<div id="recurrente" class="flow-section">
+  <p class="section-title">Ejecución mensual automática — sin intervención operativa</p>
+  <div class="flow">
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">📅</div>
+        <div class="step-content">
+          <div class="step-num">Paso 01 — Automático</div>
+          <div class="step-title">Trigger por fecha de aniversario</div>
+          <div class="step-desc">Airtable detecta automáticamente qué clientes tienen su fecha de cobro igual a hoy, con método pagoTIC y tienen cobro pendiente.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-blue">
+      <div class="step-inner">
+        <div class="step-icon">🧮</div>
+        <div class="step-content">
+          <div class="step-num">Paso 02 — Sistema Airtable</div>
+          <div class="step-title">Cálculo del monto a cobrar</div>
+          <div class="step-desc">Airtable consulta todos los productos activos del cliente, de la base 'CLIENTES', y suma el monto total del período siguiente.</div>
+          <span class="step-tag tag-sistema">Sistema</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-green">
+      <div class="step-inner">
+        <div class="step-icon">📤</div>
+        <div class="step-content">
+          <div class="step-num">Paso 03 — pagoTIC</div>
+          <div class="step-title">Airtable envía el cobro a pagoTIC</div>
+          <div class="step-desc">POST a pagoTIC con el token del cliente, el monto, la fecha de vencimiento (hoy) y una ventana de 5 días para reintentos automáticos en caso de rechazo.</div>
+          <span class="step-tag tag-pagotic">pagoTIC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-green">
+      <div class="step-inner">
+        <div class="step-icon">⚡</div>
+        <div class="step-content">
+          <div class="step-num">Paso 04 — pagoTIC</div>
+          <div class="step-title">pagoTIC procesa el débito</div>
+          <div class="step-desc">El cobro ingresa al lote de procesamiento (VISA, CBU, etc.). pagoTIC notifica cada cambio de estado al webhook de Airtable: <strong style="color:#f5c842">Emitido → En proceso → Aprobado / Rechazado</strong></div>
+          <span class="step-tag tag-pagotic">pagoTIC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">webhook → Airtable (approved)</div>
+      <div class="connector-line"></div>
+      <div class="connector-arrow"></div>
+    </div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">✅</div>
+        <div class="step-content">
+          <div class="step-num">Paso 05 — Automático</div>
+          <div class="step-title">Airtable registra el pago y genera la factura</div>
+          <div class="step-desc">Al recibir webhook con estado <strong style="color:#22d3a5">approved</strong>, Airtable registra el pago, avanza la fecha del próximo cobro al mismo día del mes siguiente y genera la factura automáticamente.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="note">
+    <strong>Nota operativa:</strong> Este flujo corre de forma completamente automática. El equipo operativo no necesita intervenir en ningún paso salvo que un cobro termine en estado rechazado definitivo. <a onclick="showTab('rechazo', document.querySelectorAll('.tab')[2])">Ver flujo ③ Gestión de rechazos</a>.
+  </div>
+</div>
+
+<!-- FLUJO 3: RECHAZOS -->
+<div id="rechazo" class="flow-section">
+  <p class="section-title">Desde el primer rechazo hasta la resolución</p>
+  <div class="flow">
+
+    <div class="step c-red">
+      <div class="step-inner">
+        <div class="step-icon">❌</div>
+        <div class="step-content">
+          <div class="step-num">Paso 01 — pagoTIC</div>
+          <div class="step-title">Cobro rechazado</div>
+          <div class="step-desc">pagoTIC intenta procesar el débito y obtiene rechazo del medio de pago del cliente (falta de fondos, tarjeta vencida, etc.). Airtable recibe el webhook y registra el intento.</div>
+          <span class="step-tag tag-pagotic">pagoTIC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">🔄</div>
+        <div class="step-content">
+          <div class="step-num">Paso 02 — Automático</div>
+          <div class="step-title">Reintentos automáticos (ventana 5 días)</div>
+          <div class="step-desc">pagoTIC reintenta el cobro automáticamente dentro de la ventana de 5 días. Airtable registra cada intento con estado <strong style="color:#fb923c">Reintentando</strong>. No requiere intervención del equipo.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">¿Se aprobó dentro de la ventana?</div>
+      <div class="connector-line"></div>
+      <div class="connector-arrow"></div>
+    </div>
+
+    <div class="branch-grid">
+      <div>
+        <div class="branch-label" style="color:var(--accent-green)">✓ Sí — cobro aprobado</div>
+        <div class="step c-green">
+          <div class="step-inner">
+            <div class="step-icon">✅</div>
+            <div class="step-content">
+              <div class="step-num">Resuelto automáticamente</div>
+              <div class="step-title">Cobro confirmado</div>
+              <div class="step-desc">El reintento fue exitoso. Airtable recibe el webhook <strong style="color:#22d3a5">approved</strong>, actualiza el registro y genera la factura normalmente.</div>
+              <span class="step-tag tag-auto">Automático</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="branch-label" style="color:var(--accent-red)">✗ No — venció la ventana</div>
+        <div class="step c-red action-required">
+          <div class="step-inner">
+            <div class="step-icon">🚨</div>
+            <div class="step-content">
+              <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+              <div class="step-num">Rechazo definitivo</div>
+              <div class="step-title">Pasa a gestión operativa</div>
+              <div class="step-desc">El registro queda en estado <strong style="color:#f75f5f">Rechazado</strong> en Airtable. El equipo operativo debe intervenir para generar un link de pago adicional.</div>
+              <span class="step-tag tag-operativo">Operativo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">🔗</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 03 — Equipo Operativo</div>
+          <div class="step-title">Generar link de pago adicional</div>
+          <div class="step-desc">
+            El equipo operativo genera un link de pago adicional y lo comparte al cliente:
+            <ol>
+              <li>Ir a la tabla <strong style="color:#4f8ef7">REGISTROS</strong>, vista <strong style="color:#4f8ef7">"Crear link de pago adicional"</strong></li>
+              <li>Hacer click en <strong style="color:#f5c842">"Generar link adicional"</strong></li>
+              <li>Copiar el link que aparece en el campo <strong style="color:#f5c842">"Link adicional"</strong> y compartirlo al cliente</li>
+            </ol>
+          </div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">✅</div>
+        <div class="step-content">
+          <div class="step-num">Paso 04 — Automático</div>
+          <div class="step-title">Airtable registra el pago y cierra el ciclo</div>
+          <div class="step-desc">Una vez que el cliente paga a través del link adicional, Airtable recibe el webhook <strong style="color:#22d3a5">approved</strong>, registra el cobro, genera la factura y avanza la fecha del próximo cobro al mes siguiente.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="note">
+    <strong>Nota operativa:</strong> Se recomienda revisar la vista "Rechazos pendientes" en Airtable al menos una vez por día hábil para minimizar la mora. Ante rechazos recurrentes de un mismo cliente, evaluar contacto telefónico directo.
+  </div>
+</div>
+
+<!-- FLUJO 4: PROPORCIONALES -->
+<div id="proporcionales" class="flow-section">
+  <p class="section-title">Cobro proporcional para altas fuera de ciclo</p>
+  <div class="flow">
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">📋</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 01 — Equipo Operativo</div>
+          <div class="step-title">Acceder a la vista de proporcionales</div>
+          <div class="step-desc">Ir a la tabla <strong style="color:#4f8ef7">REGISTROS</strong>, vista <strong style="color:#4f8ef7">"Crear proporcionales"</strong>.</div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">✏️</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 02 — Equipo Operativo</div>
+          <div class="step-title">Completar los datos del proporcional</div>
+          <div class="step-desc">Completar los siguientes campos en el registro del cliente:</div>
+          <div class="field-chips">
+            <span class="field-chip">Día de alta</span>
+            <span class="field-chip">Precio producto</span>
+          </div>
+          <div class="step-desc" style="margin-top:6px"><strong style="color:#f5c842">"Día de alta"</strong> = día de alta del servicio. <strong style="color:#f5c842">"Precio producto"</strong> = precio del producto nuevo.</div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">⚡</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 03 — Equipo Operativo</div>
+          <div class="step-title">Generar el link proporcional</div>
+          <div class="step-desc">Hacer click en <strong style="color:#f5c842">"Generar link proporcional"</strong>. El sistema calcula automáticamente el monto proporcional correspondiente.</div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-yellow action-required">
+      <div class="step-inner">
+        <div class="step-icon">📤</div>
+        <div class="step-content">
+          <div class="action-badge">⚠ ACCIÓN REQUERIDA</div>
+          <div class="step-num">Paso 04 — Equipo Operativo</div>
+          <div class="step-title">Compartir el link al cliente</div>
+          <div class="step-desc">Copiar el link que aparece en el campo <strong style="color:#f5c842">"Link proporcional"</strong> y compartirlo al cliente para que realice el pago.</div>
+          <span class="step-tag tag-operativo">Operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <div class="step c-orange">
+      <div class="step-inner">
+        <div class="step-icon">✅</div>
+        <div class="step-content">
+          <div class="step-num">Paso 05 — Automático</div>
+          <div class="step-title">Cliente paga y entra en el flujo de cobros mensual</div>
+          <div class="step-desc">El cliente paga a través del link proporcional. Airtable recibe el webhook <strong style="color:#22d3a5">approved</strong>, registra el cobro y el cliente entra automáticamente en el flujo de cobros mensual normal. <a onclick="showTab('recurrente', document.querySelectorAll('.tab')[1])">Ver flujo ② Cobro recurrente mensual</a>.</div>
+          <span class="step-tag tag-auto">Automático</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="note">
+    <strong>Nota operativa:</strong> Utilizar este flujo cada vez que un cliente se da de alta fuera del ciclo de cobro regular y necesita pagar un monto proporcional por los días restantes del período en curso.
+  </div>
+</div>
+
+<footer>
+  Última actualización: Marzo 2026 · Nautom × Impacto Positivo
+</footer>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.flow-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+</body></html>
